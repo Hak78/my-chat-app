@@ -32,36 +32,26 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip openjdk-11-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev libgdbm-dev libsqlite3-dev libbz2-dev wget
+        sudo apt install -y git zip unzip openjdk-11-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev libgdbm-dev libsqlite3-dev libbz2-dev
         pip install --upgrade pip
         pip install Cython==0.29.33 buildozer
 
-    # 5. تهيئة الـ SDK برابط مستقر ومضمون لمنع مشاكل الـ sdkmanager والتراخيص
-    - name: Pre-setup Android SDK Command-line Tools
-      run: |
-        # إنشاء المسارات التي يتوقعها buildozer لـ SDK
-        mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
-        cd ~/.buildozer/android/platform/android-sdk/cmdline-tools
-        
-        # تحميل النسخة المستقرة الرسمية والمضمونة من خوادم جوجل (الإصدار 11076708)
-        wget https://google.com -O cmdline-tools.zip
-        
-        # فك الضغط والتحقق
-        unzip cmdline-tools.zip
-        rm cmdline-tools.zip
-        
-        # تنظيم المسار الداخلي كما تتطلبه أدوات أندرويد
-        mv cmdline-tools latest
-        
-        # قبول كافة التراخيص مسبقاً لضمان عدم توقف البناء
-        yes | ./latest/bin/sdkmanager --sdk_root=/home/runner/.buildozer/android/platform/android-sdk --licenses
+    # 5. استخدام الأداة الرسمية المعتمدة لتهيئة وتثبيت الـ Android SDK تلقائياً وحل مشكلة التراخيص
+    - name: Set up Android SDK
+      uses: android-actions/setup-android@v3
 
-    # 6. بناء حزمة التطبيق (APK) باستخدام Buildozer
+    # 6. ربط مسار الـ SDK بالمجلد الذي يتوقعه تطبيق Buildozer لتفادي إعادة تحميله
+    - name: Link Android SDK for Buildozer
+      run: |
+        mkdir -p ~/.buildozer/android/platform
+        ln -s $ANDROID_HOME ~/.buildozer/android/platform/android-sdk
+
+    # 7. بناء حزمة التطبيق (APK) باستخدام Buildozer
     - name: Build with Buildozer
       run: |
         yes | buildozer android debug
 
-    # 7. رفع ملف الـ APK الناتج كـ Artifact لتحميله
+    # 8. رفع ملف الـ APK الناتج كـ Artifact لتحميله من المتصفح
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
