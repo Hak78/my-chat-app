@@ -49,12 +49,20 @@ jobs:
         pip install --upgrade cython==0.29.36
         pip install --upgrade buildozer
 
-    - name: Accept Android Licenses and Build APK
+    - name: Accept Android Licenses Automatically
       run: |
-        # الموافقة التلقائية على جميع تراخيص أندرويد عبر سطر الأوامر
-        yes | sdkmanager --licenses || true
+        # إنشاء المجلدات الخاصة بأندرويد والموافقة التلقائية على كافة التراخيص لتجنب التوقف
+        ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+        mkdir -p $ANDROID_HOME/licenses
+        echo -e "\n8933bac163af42a8b9585d164c5290a0245fcffc" > $ANDROID_HOME/licenses/android-sdk-license
+        echo -e "\n24333f8a43b681623c22e153b921199ece0f66d8" > $ANDROID_HOME/licenses/android-sdk-preview-license
         
-        # تشغيل عملية البناء
+        # طريقة بديلة لضمان قبول أي ترخيص مفقود
+        mkdir -p /home/runner/.android
+        echo "### License accepted" > /home/runner/.android/repositories.cfg
+
+    - name: Build APK with Buildozer
+      run: |
         buildozer -v android debug
 
     - name: Upload APK Artifact
