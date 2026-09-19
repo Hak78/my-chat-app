@@ -49,12 +49,14 @@ jobs:
         pip install --upgrade cython==0.29.36
         pip install --upgrade buildozer
 
-    - name: Build APK with Buildozer
+    - name: Accept Android Licenses and Build APK
       run: |
+        # الموافقة المسبقة على جميع تراخيص أندرويد لتجنب توقف البناء
+        mkdir -p /home/runner/.android
+        echo "### License accepted" > /home/runner/.android/repositories.cfg
+        
+        # تشغيل البناء
         buildozer -v android debug
-      env:
-        # السماح بقبول التراخيص تلقائياً بدون الحاجة لأمر yes
-        BUILDER_ACCEPT_LICENSES: "1"
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
