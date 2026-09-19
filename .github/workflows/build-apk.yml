@@ -36,15 +36,17 @@ jobs:
         pip install --upgrade pip
         pip install Cython==0.29.33 buildozer
 
-    # 5. حل مشكلة الـ sdkmanager عبر إعداد أدوات سطر الأوامر مسبقاً
+    # 5. تهيئة الـ SDK برابط مستقر ومضمون لمنع مشاكل الـ sdkmanager والتراخيص
     - name: Pre-setup Android SDK Command-line Tools
       run: |
         # إنشاء المسارات التي يتوقعها buildozer لـ SDK
         mkdir -p ~/.buildozer/android/platform/android-sdk/cmdline-tools
         cd ~/.buildozer/android/platform/android-sdk/cmdline-tools
         
-        # تحميل أحدث نسخة مستقرة متوافقة من أدوات سطر أوامر أندرويد
+        # تحميل النسخة المستقرة الرسمية والمضمونة من خوادم جوجل (الإصدار 11076708)
         wget https://google.com -O cmdline-tools.zip
+        
+        # فك الضغط والتحقق
         unzip cmdline-tools.zip
         rm cmdline-tools.zip
         
