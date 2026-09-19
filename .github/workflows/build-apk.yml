@@ -15,7 +15,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # 2. إعداد إصدار جافا 17 (إجباري للتوافق مع Android API 33 والـ Gradle الحديث)
+    # 2. إعداد إصدار جافا المستقر 17 المتوافق مع أندرويد 33
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -28,13 +28,12 @@ jobs:
       with:
         python-version: '3.10'
 
-    # 4. تثبيت الحزم والاعتمادات اللازمة للنظام وتجهيز الأدوات
+    # 4. تثبيت الحزم والاعتمادات اللازمة للنظام
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev libgdbm-dev libsqlite3-dev libbz2-dev libltdl-dev
+        sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev libgdbm-dev libsqlite3-dev libbz2-dev libltdl-dev
         pip install --upgrade pip
-        # تثبيت إصدار مستقر من Cython متوافق مع Kivy وبيئة العمل
         pip install "Cython<3.0.0" buildozer
 
     # 5. تفعيل التخزين المؤقت للـ Buildozer لتسريع عمليات البناء القادمة
@@ -46,8 +45,11 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildozer-
 
-    # 6. بناء حزمة التطبيق (APK) المباشر بقبول التراخيص تلقائياً
+    # 6. بناء حزمة التطبيق (APK) المباشر مع حماية الذاكرة العشوائية من الانهيار
     - name: Build with Buildozer
+      env:
+        _JAVA_OPTIONS: "-Xmx4g"
+        GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g -Dorg.gradle.workers.max=2"
       run: |
         yes | buildozer android debug
 
