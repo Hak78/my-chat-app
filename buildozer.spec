@@ -14,6 +14,9 @@ android.api = 33
 android.minapi = 21
 android.ndk = 25b
 
+# تحديد معمارية واحدة حديثة للهواتف لتخفيف الضغط على الذاكرة وتسريع البناء للنصف
+android.archs = arm64-v8a
+
 # قبول تراخيص الـ SDK تلقائياً لتفادي توقف البناء في GitHub Actions
 android.accept_sdk_license = True
 
