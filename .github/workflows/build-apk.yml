@@ -15,12 +15,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    # 2. إعداد إصدار جافا المستقر 11 الافتراضي لـ Buildozer
-    - name: Set up JDK 11
+    # 2. إعداد إصدار جافا 17 (إجباري للتوافق مع Android API 33 والـ Gradle الحديث)
+    - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '11'
+        java-version: '17'
 
     # 3. إعداد بايثون المستقر
     - name: Set up Python
@@ -28,16 +28,16 @@ jobs:
       with:
         python-version: '3.10'
 
-    # 4. تثبيت الحزم الأساسية للنظام وإجبار تثبيت نسخة Cython المتوافقة
+    # 4. تثبيت الحزم والاعتمادات اللازمة للنظام وتجهيز الأدوات
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y git zip unzip openjdk-11-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev libgdbm-dev libsqlite3-dev libbz2-dev libltdl-dev
+        sudo apt install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake libffi-dev libgdbm-dev libsqlite3-dev libbz2-dev libltdl-dev
         pip install --upgrade pip
-        # استخدام إصدار دقيق ومستقر من Cython لحل مشاكل التجميع
+        # تثبيت إصدار مستقر من Cython متوافق مع Kivy وبيئة العمل
         pip install "Cython<3.0.0" buildozer
 
-    # 5. تفعيل التخزين المؤقت للـ Buildozer
+    # 5. تفعيل التخزين المؤقت للـ Buildozer لتسريع عمليات البناء القادمة
     - name: Cache Buildozer global directory
       uses: actions/cache@v4
       with:
@@ -46,12 +46,12 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildozer-
 
-    # 6. بناء حزمة التطبيق (APK)
+    # 6. بناء حزمة التطبيق (APK) المباشر بقبول التراخيص تلقائياً
     - name: Build with Buildozer
       run: |
         yes | buildozer android debug
 
-    # 7. رفع ملف الـ APK الناتج كـ Artifact
+    # 7. رفع ملف الـ APK الناتج كـ Artifact جاهز للتحميل
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
