@@ -14,6 +14,9 @@ android.api = 33
 android.minapi = 21
 android.ndk = 25b
 
+# قبول تراخيص الـ SDK تلقائياً لتفادي توقف البناء في GitHub Actions
+android.accept_sdk_license = True
+
 # (str) إجبار البناء على استخدام إصدار مستقر لا يتطلب تراخيص معقدة
 android.build_tools_version = 33.0.0
 
