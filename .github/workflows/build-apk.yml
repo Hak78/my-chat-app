@@ -51,7 +51,10 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        yes | buildozer -v android debug
+        buildozer -v android debug
+      env:
+        # السماح بقبول التراخيص تلقائياً بدون الحاجة لأمر yes
+        BUILDER_ACCEPT_LICENSES: "1"
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
