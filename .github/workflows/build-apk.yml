@@ -51,11 +51,10 @@ jobs:
 
     - name: Accept Android Licenses and Build APK
       run: |
-        # الموافقة المسبقة على جميع تراخيص أندرويد لتجنب توقف البناء
-        mkdir -p /home/runner/.android
-        echo "### License accepted" > /home/runner/.android/repositories.cfg
+        # الموافقة التلقائية على جميع تراخيص أندرويد عبر سطر الأوامر
+        yes | sdkmanager --licenses || true
         
-        # تشغيل البناء
+        # تشغيل عملية البناء
         buildozer -v android debug
 
     - name: Upload APK Artifact
