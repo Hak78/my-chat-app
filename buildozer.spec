@@ -12,11 +12,13 @@ package.domain = org.chat
 # (str) Source files where the application lives (relative to .spec file)
 source.dir = .
 
-# (list) Source files to include (let it empty to include all the files)
+# (list) Source files to include
 source.include_exts = py,png,jpg,kv,atlas
 
+# (str) Version of the application
+version = 0.1
+
 # (list) Application requirements
-# comma separated e.g. requirements = sqlite3,kivy
 requirements = python3,kivy
 
 # (str) Supported orientations
@@ -28,16 +30,16 @@ fullscreen = 0
 # (list) Permissions
 android.permissions = INTERNET,CAMERA
 
-# (int) Target Android API, should be as high as possible.
+# (int) Target Android API
 android.api = 33
 
-# (int) Minimum API your APK will support.
+# (int) Minimum API your APK will support
 android.minapi = 21
 
 # (int) Android SDK version to use
 android.sdk = 33
 
-# (str) Android NDK version to use (السطر المسؤول عن حل مشكلة الخطأ)
+# (str) Android NDK version to use
 android.ndk = 25b
 
 # (str) Presplash background color
@@ -45,8 +47,8 @@ android.presplash_color = #2E3B4E
 
 [buildozer]
 
-# (int) Log level (0 = error only, 1 = info, 2 = debug (with command output))
+# (int) Log level
 log_level = 2
 
-# (int) Display warning if buildozer is run as root (0 = False, 1 = True)
+# (int) Display warning if buildozer is run as root
 warn_on_root = 1
